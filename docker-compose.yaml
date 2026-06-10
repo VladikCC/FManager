@@ -1,0 +1,20 @@
+version: "3.8"
+
+services:
+  backend:
+    container_name: FM_backend
+    restart: always
+    build: ./backend
+    ports:
+      - 8000:8000
+    volumes:
+      - ./uploads:/app/uploads
+
+  frontend:
+    container_name: FM_frontend
+    restart: always
+    build: ./frontend
+    depends_on:
+      - backend
+    ports:
+      - 80:80

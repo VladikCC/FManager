@@ -1,0 +1,50 @@
+name: First ci-cd test
+
+on:
+    push:
+        branches:
+            - main
+    
+    pull_request:
+        branches:
+            - main
+
+jobs:
+ test-step:
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Copy project
+        uses: actions/checkout@v6
+
+      - name: Test flake8
+        run: |
+          pip install flake8
+          flake8 ./backend --count --select=E9,F63,F7,F82 --show-source --statistics
+
+      - name: Build and Start
+        run: docker compose up -d --build
+
+      - name: Wait for services
+        run: |
+          echo $GITHUB_REF
+          ls -a
+          sleep 30
+
+      - name: Check docker status
+        run: |
+          docker compose ps
+          docker compose logs backend
+          sleep 20
+      
+      - name: Test backend service
+        run: curl --fail http://localhost:8000/scores || exit 1
+
+      - name: Test frontend service
+        run: curl --fail http://localhost:80 || exit 1
+
+      - name: down docker
+        run: |
+          docker compose down
+          echo "test complete wait Merge for admin"

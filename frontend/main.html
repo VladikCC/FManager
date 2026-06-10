@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>FManager</title>
+</head>
+<body>
+
+<h1>FManager</h1>
+
+<input type="file" id="fileInput">
+<button onclick="uploadFile()">Upload</button>
+
+<br><br>
+
+<button onclick="loadFiles()">Show Files</button>
+
+<ul id="fileList"></ul>
+
+<script>
+async function uploadFile() {
+    const fileInput = document.getElementById("fileInput");
+    const file = fileInput.files[0];
+
+    if (!file) {
+        alert("Choose file");
+        return;
+    }
+
+    const formData = new FormData();
+    formData.append("file", file);
+
+    try {
+        const response = await fetch("http://localhost:8000/upload", {
+            method: "POST",
+            body: formData
+        });
+
+        if (!response.ok) {
+            throw new Error(`Server error: ${response.status}`);
+        }
+
+        const result = await response.json();
+        alert(result.message);
+        
+        fileInput.value = "";
+        loadFiles();
+    } catch (error) {
+        alert("Upload failed: " + error.message);
+    }
+}
+
+async function loadFiles() {
+    try {
+        const response = await fetch("http://localhost:8000/files");
+        
+        if (!response.ok) {
+            throw new Error(`Server error: ${response.status}`);
+        }
+
+        const files = await response.json();
+        const list = document.getElementById("fileList");
+        list.innerHTML = "";
+
+        files.forEach(file => {
+            const li = document.createElement("li");
+            li.textContent = `${file.name} (${file.size} bytes)`;
+            list.appendChild(li);
+        });
+    } catch (error) {
+        alert("Failed to load files: " + error.message);
+    }
+}
+</script>
+
+</body>
+</html>
