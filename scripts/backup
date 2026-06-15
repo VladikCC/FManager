@@ -1,0 +1,10 @@
+#!/bin/bash
+
+SCRIPT_DIR=$(dirname "$0")
+TARGET_DIR="$SCRIPT_DIR/../uploads"
+
+mkdir -p "$SCRIPT_DIR/../backups"
+
+tar -czf "$SCRIPT_DIR/../backups/uploads_backup_$(date +%Y-%m-%d=%H:%M:%S).tar.gz" -C "$SCRIPT_DIR/.." uploads
+
+echo "Backup completed! [$(date +%Y-%m-%d=%H:%M:%S)]" >> "$SCRIPT_DIR/logs-uploads"
