@@ -4,7 +4,9 @@ services:
   backend:
     container_name: FM_backend
     restart: always
-    build: ./backend
+    build:
+      context: ./backend
+      network: host
     ports:
       - 8000:8000
     volumes:
