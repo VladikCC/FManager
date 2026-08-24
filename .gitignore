@@ -1,0 +1,4 @@
+backups/
+uploads/
+*.deb
+*.tar.gz

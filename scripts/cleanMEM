@@ -2,7 +2,7 @@
 
 SCRIPT_DIR=$(dirname "$0")
 
-find "$SCRIPT_DIR/../backups" -type f -name "*.tar.gz" -mtime +7 -delete
+find "$SCRIPT_DIR/../backups" -type f -name "*.tar.gz" -mtime +0 -delete
 
 echo "CleanMEM completed! [$(date +%Y-%m-%d=%H:%M:%S)]" >> "$SCRIPT_DIR/logs-uploads"
 
